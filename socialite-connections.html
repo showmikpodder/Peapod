@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Socialite ConnectionsShowmik's Peapod</title>
+
+    <link rel="stylesheet" href="./theme/css/main.css">
+    <link rel="stylesheet" href="./theme/css/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <div><img src="" class="grv-img"/></div>
+        <div class="title"><a href="./">Showmik's Peapod </a></div>
+        <div class="sub-title"></div>
+
+<p>
+  <div class="view"><a href="./archives.html">Archives</a></div>
+</p>
+
+<!-- Social links -->
+<div class="social">
+<h4>Follow Me</h4>
+<ul>
+    <li><a href="https://www.linkedin.com/in/showmikpodder/">Linkedin</a></li>
+    <li><a href="https://twitter.com/poddyiatry">Twitter</a></li>
+    <li><a href="https://github.com/showmikpodder/">Github</a></li>
+</ul>
+</div>
+
+      </header>
+      <section>
+<section id="content" class="body">
+  <article>
+      <div class="article-title">
+        Socialite Connections
+      </div>
+
+    <div class="entry-content">
+<p>
+<small>
+<abbr class="published" title="2017-09-16T00:00:00-04:00">
+  Sat 16 September 2017
+</abbr> | 
+  tags: 
+    <a href="./tag/python.html">python</a>, 
+    <a href="./tag/beautifulsoup.html">beautifulsoup</a>, 
+    <a href="./tag/spacy.html">spacy</a>, 
+    <a href="./tag/web-extraction.html">web extraction</a>, 
+    <a href="./tag/natural-language-processing.html">natural language processing</a>, 
+    <a href="./tag/graph-theory.html">graph theory</a>, 
+ -- (<a href="./socialite-connections.html" rel="bookmark">permalink</a>)
+</small>
+</p>      <p>One of my favorite projects during my time at The Data Incubator was people based. It was cool to see how insights can be drawn about people using the information already out there on the web.</p>
+<h2>The Objective</h2>
+<p>Simply put, the main point of this project was to find out who is the most influential! This piece of information can be important for a variety of reasons. In the advertisement/marketing space, it can be important to understand who hold the most influence when trying to find an endorser for a product or cause. </p>
+<h2>The Information Source</h2>
+<p><a href="http://www.newyorksocialdiary.com/">New York Social Diary</a> is an entire website that aims to document the events that these socially influential have attended. 
+They achieve this by pictures! If you take a look at the event page for one of their recent events, <a href="http://www.newyorksocialdiary.com/party-pictures/2017/game-changers">here,</a> they have pictures of the socialites with their names in the captions. More importantly they have an entire archive of pictures from these events. Here is the list of the events found <a href="http://www.newyorksocialdiary.com/nysd/partypictures">here.</a></p>
+<h2>Extraction Part 1.</h2>
+<h4>Pulling the links to the party.</h4>
+<p>The first thing to do was to extract all the links to the parties from the list of events. </p>
+<p>So if you take a look at a picture from an event, you can see that the captions are right below the pictures. Taking a look at the browser page HTML source for the page that contains all the links, one can see that all the links to each event are placed in a <code>&lt;div class=”view-rows”&gt;</code> tag and each link lives in a <code>&lt;a ref=’link’&gt;</code> tag within <code>&lt;span&gt;</code> tags. A picture illustrating this can be seen <a href="https://ibb.co/fKoCf6">here.</a></p>
+<p>To be precise, the texts within the <code>&lt;a ref&gt;</code> tags aren’t the link themselves but the part of a bigger link address that directs to the page with the event pictures. We can just simply add on that text to the end of <code>http://www.newyorksocialdiary.com/party-pictures/</code>.</p>
+<p>In addition, we notice that there are 30 pages of these event links. All pages can simply be accessed by changing the <code>page</code> number on the <code>http://www.newyorksocialdiary.com/party-pictures?page=1</code> url.</p>
+<p>Using a combination of Python’s Requests and BeautifulSoup libraries, extracting these links are easy peasy. Check the code snippit below to give an idea of how this is done for the first page.</p>
+<p>This part pulls the raw html code from the first page and prettifys it using BeautifulSoup so it’s easier to read through.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;http://www.newyorksocialdiary.com/party-pictures&#39;</span>
+<span class="n">page</span> <span class="o">=</span> <span class="mi">0</span> 
+<span class="n">events_on_page</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;page&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">})</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">events_on_page</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">soup</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span>
+</pre></div>
+
+
+<p>Next as we noticed before, the party links live within the <code>&lt;div class=”view row”&gt;</code> tag we can use BeautifulSoup’s find all method to extract these elements.</p>
+<div class="highlight"><pre><span></span><span class="n">links</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span><span class="s1">&#39;views-row&#39;</span><span class="p">})</span>
+<span class="n">links</span>
+</pre></div>
+
+
+<p>This should return a list of div elements.</p>
+<div class="highlight"><pre><span></span>[“<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;views-row views-row-1 views-row-odd views-row-first&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;views-field views-field-title&quot;</span><span class="nt">&gt;</span> <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;field-content&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;/party-pictures/2017/hope-and-heroes&quot;</span><span class="nt">&gt;</span>Hope and Heroes<span class="nt">&lt;/a&gt;&lt;/span&gt;</span> <span class="nt">&lt;/span&gt;</span>
+<span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;views-field views-field-created&quot;</span><span class="nt">&gt;</span> <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;field-content&quot;</span><span class="nt">&gt;</span>Monday, September 11, 2017<span class="nt">&lt;/span&gt;</span> <span class="nt">&lt;/span&gt;</span> <span class="nt">&lt;/div&gt;</span>”, …
+</pre></div>
+
+
+<p>To select the name of the event, the link text and the date of the element, I created a function that utilizes BeautifulSoup’s methods.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="k">def</span> <span class="nf">get_link_date</span><span class="p">(</span><span class="n">el</span><span class="p">):</span>
+
+    <span class="n">el_title</span> <span class="o">=</span> <span class="n">links</span><span class="p">[</span><span class="n">el</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">el_title</span><span class="p">[</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">links</span><span class="p">[</span><span class="n">el</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">url</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">text</span><span class="p">),</span> <span class="s1">&#39;%A, %B </span><span class="si">%d</span><span class="s1">, %Y&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>The function builds on the list of links extracted above and selects an element, ‘el’, from that list and parses out the event name, url, and date. </p>
+<p>Building everything above into one function:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_links</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
+
+    <span class="n">list_urls_dates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;page&quot;</span><span class="p">:</span><span class="n">page</span><span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://www.newyorksocialdiary.com/party-pictures&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span> <span class="n">params</span><span class="p">)</span>
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+    <span class="n">links</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span><span class="s1">&#39;views-row&#39;</span><span class="p">})</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">_</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">links</span><span class="p">)):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">links</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">title</span><span class="p">[</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">links</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">date1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date1</span><span class="p">,</span> <span class="s1">&#39;%A, %B </span><span class="si">%d</span><span class="s1">, %Y&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> 
+        <span class="n">list_urls_dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">list_urls_dates</span>
+</pre></div>
+
+
+<p>Building an overall function that parses out all the urls and event dates from the rest of the pages is trivial and ill leave that part to the readers of this peapod. ☺</p>
+<h4>Best time to party?</h4>
+<p>This simple extraction alone can reveal insights! A simple question one can ask is what months had the most parties? Which month/year was most active for these socialites?</p>
+<p>All in all, I had extracted about 1200 event links and dates, this number will vary depending on when you end/start the extraction.</p>
+<p>My list of urls looked like this:</p>
+<div class="highlight"><pre><span></span>url_dates = [(&#39;/party-pictures/2017/hope-and-heroes&#39;, datetime.datetime(2017, 9, 11, 0, 0)), (&#39;/party-pictures/2017/maison-de-modecom-endless-summer-trunk-show&#39;, datetime.datetime(2017, 9, 1, 0, 0)), (&#39;/party-pictures/2017/women-artists-maestros-and-keepers-of-the-flame&#39;, datetime.datetime(2017, 8, 31, 0, 0)),
+…]
+</pre></div>
+
+
+<p>From this list we can assemble a pandas dataframe to keep a count of the events in each month. </p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="kn">as</span> <span class="nn">dt</span>
+
+<span class="k">def</span> <span class="nf">event_count</span><span class="p">():</span>
+
+    <span class="n">url_dates</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">url_dates</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;event&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">])</span>
+    <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%b-%Y&#39;</span><span class="p">)</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dates1</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df2</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="n">dates1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df2</span><span class="p">:</span>
+        <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="n">counts</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dates1</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">counts</span>
+</pre></div>
+
+
+<h2>Extraction Part 2.</h2>
+<h4>Pulling the Picture Captions.</h4>
+<p>So, time for the fun part! Now that we have all these links, we need to scrape out the captions from each picture on the page.</p>
+<p>We can use a similar method as we did above using BeautifulSoup. Once again if we look into the source code of any event page, the biggest thing we notice is that the photo captions are located in <code>&lt;div align="center" class="photocaption"&gt;</code> tags. Try it for one of the <a href="http://www.newyorksocialdiary.com/party-pictures/2017/fall-fundraiser-fun">events.</a></p>
+<p>One thing to note is that, the tags in which the captions live in change over time; older pages (events in 2007) contain the photocaptions in different tags. I’ll leave the investigation of what these tags are to my readers. ☺ </p>
+<p>Heres how I parsed some of the event pages:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">urlparse</span>
+
+<span class="n">clean_captions</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span> <span class="nf">get_captions</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+
+    <span class="n">full_path</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="s1">&#39;http://www.newyorksocialdiary.com/&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="c1">#combines input url path with root path</span>
+    <span class="n">url_html</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span> <span class="c1">#requests full html page of requested page</span>
+    <span class="n">url_html</span><span class="o">.</span><span class="n">text</span> <span class="c1">#prints the html text</span>
+    <span class="n">soup1</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">url_html</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span> <span class="c1">#turns the html text into a soup object</span>
+    <span class="n">captions</span> <span class="o">=</span> <span class="n">soup1</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span><span class="s1">&#39;photocaption&#39;</span><span class="p">})</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">captions</span><span class="p">)):</span> <span class="c1">#loops through captions list and returns the text</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">captions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+        <span class="n">clean_captions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span><span class="c1">#inputs the text into a clean_captions list</span>
+    <span class="k">return</span> <span class="n">clean_captions</span>
+</pre></div>
+
+
+<p>Simply passing the extracted urls from earlier through the function should return captions. Parsing the pages for all the events takes some time.</p>
+<p>After cleaning out the excess spaces, empty elements and the photographer captions, I had a list that looked like the one below.</p>
+<div class="highlight"><pre><span></span><span class="sa">u</span><span class="s1">&#39; Dr. David Lyden and Patricia Sorenson &#39;</span><span class="p">,</span>
+<span class="sa">u</span><span class="s1">&#39; Procession over the eyebrow bridge on way to Painting Gallery&#39;</span><span class="p">,</span><span class="sa">u</span><span class="s2">&quot;Jon Batiste and Marcus Miller at The NAACP Legal Defense and Educational Fund&#39;s  28th annual National Equal Justice Award Dinner.&quot;</span><span class="p">,</span>
+<span class="sa">u</span><span class="s1">&#39;Valerie and Carl Kempner&#39;</span><span class="p">,</span>
+ <span class="sa">u</span><span class="s1">&#39; Dwight Gooden and Les Lieberman &#39;</span><span class="p">,</span>
+ <span class="sa">u</span><span class="s1">&#39; Dr. Amy Cunningham-Bussel, Ray Mirra, and Dr. Tyler Janovitz &#39;</span><span class="p">,</span>
+<span class="sa">u</span><span class="s1">&#39;CEO Kate Coyne, Robert Liberman, and Libby Monaco&#39;</span><span class="p">,</span>  
+<span class="sa">u</span><span class="s1">&#39; Larry Spangler &#39;</span><span class="p">,</span>
+<span class="sa">u</span><span class="s1">&#39;Leah Aden with friends&#39;</span><span class="p">,</span>
+<span class="sa">u</span><span class="s1">&#39; Honorees Andrew Malcolm and Dan Bena &#39;</span><span class="p">,</span>
+<span class="sa">u</span><span class="s2">&quot;The scene at Michael&#39;s 25th anniversary celebration.&quot;</span><span class="p">,</span>
+<span class="err">…</span>
+</pre></div>
+
+
+<p>As you can see there’s a lot more than just names. There are descriptions of the scene, lots of formal titles like Dr. and CEO, and couples that don’t include the last names for some of the spouses (<code>u'Valerie and Carl Kempner'</code>). </p>
+<p>This stuff required more cleaning. I accomplished this using the bit of code below. It took lots of tinkering to finally get it right.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">nohonorifics_cleancaptions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">def</span> <span class="nf">junk_title_cleaner</span><span class="p">(</span><span class="n">unclean_caption</span><span class="p">):</span>
+
+    <span class="n">h1</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Mr. &#39;</span><span class="p">,</span><span class="s1">&#39;Guest&#39;</span><span class="p">,</span><span class="s1">&#39;U.S. Representative &#39;</span><span class="p">,</span><span class="s1">&#39; M.D.&#39;</span><span class="p">,</span> <span class="s1">&#39; M.D.,&#39;</span><span class="p">,</span><span class="s1">&#39;PhD&#39;</span><span class="p">,</span><span class="s1">&#39;Ph.D.&#39;</span><span class="p">,</span><span class="s1">&#39; Jr.&#39;</span><span class="p">,</span><span class="s1">&#39; Sr.&#39;</span><span class="p">,</span><span class="s1">&#39;Mrs. &#39;</span><span class="p">,</span><span class="s1">&#39;Miss &#39;</span><span class="p">,</span><span class="s1">&#39;Doctor &#39;</span><span class="p">,</span><span class="s1">&#39;Dr. &#39;</span><span class="p">,</span><span class="s1">&#39;Dr &#39;</span><span class="p">,</span><span class="s1">&#39;Chair &#39;</span><span class="p">,</span><span class="s1">&#39;CEO &#39;</span><span class="p">,</span><span class="s1">&#39;the Honorable &#39;</span><span class="p">,</span><span class="s1">&#39;Mayor &#39;</span><span class="p">,</span><span class="s1">&#39;Prince &#39;</span><span class="p">,</span><span class="s1">&#39;Baroness &#39;</span><span class="p">,</span> <span class="s1">&#39;Princess &#39;</span><span class="p">,</span> <span class="s1">&#39;Honorees &#39;</span><span class="p">,</span> <span class="s1">&#39;Honoree&#39;</span><span class="p">,</span><span class="s1">&#39; MD&#39;</span><span class="p">]</span>
+    <span class="n">h3</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;De&#39;</span><span class="p">,</span> <span class="s1">&#39;Highness &#39;</span><span class="p">,</span><span class="s1">&#39;Museum President &#39;</span><span class="p">,</span><span class="s1">&#39;Chief Curator &#39;</span><span class="p">,</span><span class="s1">&#39;Frick Director &#39;</span><span class="p">,</span><span class="s1">&#39;left &#39;</span><span class="p">,</span><span class="s1">&#39;right &#39;</span><span class="p">,</span><span class="s1">&#39;honoree &#39;</span><span class="p">,</span><span class="s1">&#39;de &#39;</span><span class="p">,</span><span class="s1">&#39;host &#39;</span><span class="p">,</span><span class="s1">&#39;dressed &#39;</span><span class="p">,</span><span class="s1">&#39;Police Commissioner &#39;</span><span class="p">,</span><span class="s1">&#39;Music Director &#39;</span><span class="p">,</span><span class="s1">&#39;Frick Trustee &#39;</span><span class="p">,</span><span class="s1">&#39;Historic Hudson Valley Trustee &#39;</span><span class="p">,</span> <span class="s1">&#39;Museum President &#39;</span><span class="p">,</span><span class="s1">&#39;Public Theater Artistic Director &#39;</span><span class="p">,</span><span class="s1">&#39;Public Theater Executive Director &#39;</span><span class="p">,</span><span class="s1">&#39;Executive Director &#39;</span><span class="p">,</span><span class="s1">&#39;Cooper Union President &#39;</span><span class="p">,</span><span class="s1">&#39;The Hon. &#39;</span><span class="p">,</span><span class="s1">&#39;Dancing Chair &#39;</span><span class="p">,</span><span class="s1">&#39;Director Emerita &#39;</span><span class="p">]</span>
+    <span class="n">h2</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Hon. &#39;</span><span class="p">,</span><span class="s1">&#39;Lord &#39;</span><span class="p">,</span><span class="s1">&#39;Senator &#39;</span><span class="p">,</span><span class="s1">&#39;Deputy &#39;</span><span class="p">,</span><span class="s1">&#39;Director &#39;</span><span class="p">,</span><span class="s1">&#39;Dean &#39;</span><span class="p">,</span><span class="s1">&#39;Actor &#39;</span><span class="p">,</span><span class="s1">&#39;Actress &#39;</span><span class="p">,</span><span class="s1">&#39; Esq.&#39;</span><span class="p">,</span> <span class="s1">&#39;Gov &#39;</span><span class="p">,</span><span class="s1">&#39;Governor &#39;</span><span class="p">,</span><span class="s1">&#39;Father &#39;</span><span class="p">,</span><span class="s1">&#39;Congresswoman &#39;</span><span class="p">,</span><span class="s1">&#39;Congressman &#39;</span><span class="p">,</span> <span class="s1">&#39;Countess &#39;</span><span class="p">,</span><span class="s1">&#39;Awardee &#39;</span><span class="p">,</span><span class="s1">&#39;Chairman &#39;</span><span class="p">,</span><span class="s1">&#39;Commissioner &#39;</span><span class="p">,</span><span class="s1">&#39;Lady &#39;</span><span class="p">,</span><span class="s1">&#39;Ambassador &#39;</span><span class="p">,</span><span class="s1">&#39;President &#39;</span><span class="p">,</span><span class="s1">&#39;CEO &#39;</span><span class="p">,</span> <span class="s1">&#39; von&#39;</span><span class="p">,</span> <span class="s1">&#39; van&#39;</span><span class="p">]</span>
+
+    <span class="n">hwords</span><span class="o">=</span><span class="n">h1</span> <span class="o">+</span> <span class="n">h2</span> <span class="o">+</span> <span class="n">h3</span>
+
+    <span class="n">honorifics</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">hwords</span><span class="p">)))</span> 
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">unclean_caption</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;, and &quot;</span><span class="p">,</span><span class="s2">&quot; and &quot;</span><span class="p">)</span> <span class="c1">#Replaces the &#39;,/sand&#39; with &#39;/sand/s&#39;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">honorifics</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1">#Replaces honorifics with empty spaces</span>
+    <span class="c1">#if x[-1] == &quot;,&quot;:</span>
+    <span class="c1">#    x = list(x)</span>
+    <span class="c1">#    x[-1] =&#39;&#39;</span>
+    <span class="c1">#    x = &#39;&#39;.join(x)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;, and &quot;</span><span class="p">,</span><span class="s2">&quot; and &quot;</span><span class="p">)</span>
+    <span class="n">notitles_clean_captions</span> <span class="o">=</span> <span class="n">x</span> <span class="c1">#cleaned of all the junk titles and such</span>
+    <span class="n">nohonorifics_cleancaptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">notitles_clean_captions</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nohonorifics_cleancaptions</span>
+</pre></div>
+
+
+<p>After dealing with the honorifics, I went after the pesky couples using regular expressions. After parsing out the ‘and’ in the captions of groups and keeping the ‘and’ in captions that had couples, I separated out the couples. This meant turning  <code>u'Valerie and Carl Kempner'</code> to <code>u'Valerie Kempner and Carl Kempner'</code>. This is going to be necessary later.</p>
+<div class="highlight"><pre><span></span><span class="n">same_family_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^[A-Za-z]+\s+and\s+[A-Za-z]+\s+[A-Za-z]+&#39;</span>
+<span class="n">testcleancaptions_nocouples</span> <span class="o">=</span><span class="p">[]</span>
+
+<span class="c1">###Takes a caption that contains a couple (Mike and Sophie Riddle) turns to (Mike Riddle and Sophie Riddle)</span>
+<span class="k">def</span> <span class="nf">same_family_couples</span><span class="p">(</span><span class="n">caption</span><span class="p">,</span> <span class="n">same_family_regex</span><span class="p">):</span>
+
+    <span class="n">fixed_caption</span> <span class="o">=</span> <span class="n">caption</span>
+    <span class="n">divided_by_commas</span> <span class="o">=</span> <span class="n">caption</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">divided_by_commas</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">same_family_regex</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span> <span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; and &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">first_name</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">second_full_name</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">common_last_name</span> <span class="o">=</span> <span class="n">second_full_name</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">fixed_string</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">first_name</span><span class="p">,</span> <span class="n">common_last_name</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">second_full_name</span><span class="p">])</span>
+                <span class="n">fixed_caption</span> <span class="o">=</span> <span class="n">fixed_caption</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">fixed_string</span><span class="p">)</span>
+                <span class="n">testcleancaptions_nocouples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fixed_caption</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">testcleancaptions_nocouples</span>
+</pre></div>
+
+
+<p>Finally after all this cleaning, we can do some natural language processing using spaCy. </p>
+<p>This python package is very interesting. It provides very fast part of speech tagging and can be used to identify names! 
+It works with Unicode text so after converting the list we have back to that form, I ran the following code.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+
+<span class="n">only_names_captions</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span> <span class="nf">spacy_name_extraction</span><span class="p">(</span><span class="n">unicode_clean_list</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">unicode_clean_list</span><span class="p">:</span>
+        <span class="n">doc1</span> <span class="o">=</span><span class="n">nlp</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">doc1</span><span class="o">.</span><span class="n">ents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ent</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="mi">346</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">ent</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">only_names_captions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">only_names_captions</span>
+</pre></div>
+
+
+<p>This function goes through each element in the cleaned captions and identifies only the names and tags them. If the tag matches the label 346, which is the code for name in spacy, it is extracted. </p>
+<p>The final result should be a super list of the names of every caption from every event picture on the website.</p>
+<p>All in all, I ended up with over 80,000 unique names from over 100,000 captions. </p>
+<p>That should finish the extraction and cleaning part of this project.</p>
+    </div><!-- /.entry-content -->
+  </article>
+</section>
+      </section>
+      <footer>
+        <p><small>&copy; Showmik's Peapod &mdash; Theme based on Sundown by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!-- Scale fix -->
+    <script>
+      var metas = document.getElementsByTagName('meta');
+      var i;
+      
+      if (navigator.userAgent.match(/iPhone/i)) {
+        for (i=0; i<metas.length; i++) {
+          if (metas[i].name == "viewport") {
+            metas[i].content = "width=device-width, minimum-scale=1.0, maximum-scale=1.0";
+          }
+        }
+      
+        document.addEventListener("gesturestart", gestureStart, false);
+      }
+
+      function gestureStart() {
+        for (i=0; i<metas.length; i++) {
+          if (metas[i].name == "viewport") {
+            metas[i].content = "width=device-width, minimum-scale=0.25, maximum-scale=1.6";
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
