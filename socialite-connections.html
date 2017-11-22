@@ -30,6 +30,7 @@
     <li><a href="https://www.linkedin.com/in/showmikpodder/">Linkedin</a></li>
     <li><a href="https://twitter.com/poddyiatry">Twitter</a></li>
     <li><a href="https://github.com/showmikpodder/">Github</a></li>
+    <li><a href="https://showmikpodder.github.io/Peapod/a-little-about-me.html">About Me</a></li>
 </ul>
 </div>
 
@@ -268,6 +269,7 @@ They achieve this by pictures! If you take a look at the event page for one of t
 <p>This python package is very interesting. It provides very fast part of speech tagging and can be used to identify names! 
 It works with Unicode text so after converting the list we have back to that form, I ran the following code.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;en&#39;</span><span class="p">)</span>
 
 <span class="n">only_names_captions</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -286,10 +288,61 @@ It works with Unicode text so after converting the list we have back to that for
 </pre></div>
 
 
-<p>This function goes through each element in the cleaned captions and identifies only the names and tags them. If the tag matches the label 346, which is the code for name in spacy, it is extracted. </p>
+<p>This function goes through each element in the cleaned captions and identifies only the names and tags them. If the tag matches the label 346, which is the code for name in spacy, it is extracted. This essentially removes those descriptive captions that include no names.</p>
 <p>The final result should be a super list of the names of every caption from every event picture on the website.</p>
 <p>All in all, I ended up with over 80,000 unique names from over 100,000 captions. </p>
 <p>That should finish the extraction and cleaning part of this project.</p>
+<h2>Insights</h2>
+<p>Now that we have these names, what insights can be drawn from them? </p>
+<p>If I were trying to market my product, I would love to get an endorsement from one of these folks. Ideally, everyone should endorse my great product. But since we live in a less than ideal world and I only have a finite amount of cash, I need to find an endorser that would have the most impact; the most popular, popular kid. </p>
+<p>So who’s most popular in this social scene? The best way to answer that question is to basically see who appears with the most people in the pictures. </p>
+<p>To see this, we need to build a network graph.</p>
+<h4>Connections</h4>
+<p>So every time a person appears in a picture with another picture, we can call that a connection or link. To build this graph, I used the python library, <a href="https://networkx.github.io/">networkx.</a></p>
+<p>To get the pairs of connections out of the captions, we definitely need to do some data organization. </p>
+<p>There are some pictures with multiple people in them; we need to reduce those captions into lists of pairs. I did that using the python library itertools.</p>
+<p>The nodes in this network graph are the unique names in the list and an edge is created in the graph every time a person appears in a picture with another person. The weight of those edges increase when the two individuals appear in more photos together. </p>
+<p>The code below represents how I created out the network. </p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="kn">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">uniquelist</span><span class="p">)</span> <span class="c1">#uniquelist is a list that contains all the unique names that appear in the captions</span>
+
+<span class="n">only_names_captions</span>
+<span class="n">edgelists</span> <span class="o">=</span> <span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">captions</span><span class="p">)</span> <span class="k">for</span> <span class="n">captions</span> <span class="ow">in</span> <span class="n">only_names_captions</span><span class="p">]</span>
+<span class="n">edgelists</span> <span class="o">=</span> <span class="p">[</span><span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">captions</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">captions</span> <span class="ow">in</span> <span class="n">edgelists</span><span class="p">]</span>
+<span class="n">edgelists</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">captions</span><span class="p">)</span> <span class="k">for</span> <span class="n">captions</span> <span class="ow">in</span> <span class="n">edgelists</span><span class="p">]</span>
+<span class="n">edgelists</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">edgelists</span><span class="p">,</span> <span class="p">[])</span>
+
+<span class="n">uniquedges</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">edgelists</span><span class="p">))</span>
+
+<span class="n">xedges</span><span class="o">=</span><span class="n">Counter</span><span class="p">(</span><span class="n">edgelists</span><span class="p">)</span>
+<span class="n">edgecounts</span><span class="o">=</span><span class="p">[</span><span class="n">xedges</span><span class="p">[</span><span class="n">namestr</span><span class="p">]</span> <span class="k">for</span> <span class="n">namestr</span> <span class="ow">in</span> <span class="n">uniquedges</span><span class="p">]</span>
+
+<span class="n">wedges</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">edgecounts</span><span class="p">)</span> <span class="c1">#wedges represents the weights of the edges</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edgecounts</span><span class="p">)):</span>
+    <span class="n">wedges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="n">uniquedges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">uniquedges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">edgecounts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">G</span><span class="o">.</span><span class="n">add_weighted_edges_from</span><span class="p">(</span><span class="n">wedges</span><span class="p">)</span>
+
+<span class="n">degrees</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">degree_iter</span><span class="p">(</span><span class="n">uniquelist</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Degrees represents the number of edges to a node. Higher the number of degrees, the more connections that individual has. 
+My final top list appeared a little like this:</p>
+<div class="highlight"><pre><span></span>(&#39;Jean Shafiroff&#39;, 346)
+(&#39;Gillian Miniter&#39;, 309)
+(&#39;Mark Gilbertson&#39;, 298)
+(&#39;Andrew Saffir&#39;, 204)
+(&#39;Geoffrey Bradfield&#39;, 200)
+(&#39;Alexandra Lebenthal&#39;, 196)
+(&#39;Somers Farkas&#39;, 190)
+(&#39;Debbie Bancroft&#39;, 166)
+(&#39;Jamee Gregory&#39;, 166)
+…
+</pre></div>
     </div><!-- /.entry-content -->
   </article>
 </section>
