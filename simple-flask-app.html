@@ -96,9 +96,11 @@ This is where the main python code lives, these flask apps also have a general s
 </pre></div>
 
 
-<p>The rest of these files are really related to Heroku and your deployment process
-* <strong>Procfile</strong>
-In my app I used gunicorn to point to where the app is for Heroku.</p>
+<p>The rest of these files are really related to Heroku and your deployment process.</p>
+<ul>
+<li><strong>Procfile</strong>
+In my app I used gunicorn to point to where the app is for Heroku.</li>
+</ul>
 <div class="highlight"><pre><span></span><span class="n">web</span><span class="o">:</span> <span class="n">gunicorn</span> <span class="n">app</span><span class="o">:</span><span class="n">app</span>
 </pre></div>
 
