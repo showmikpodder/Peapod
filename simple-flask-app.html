@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Simple Flask AppShowmik's Peapod</title>
+
+    <link rel="stylesheet" href="./theme/css/main.css">
+    <link rel="stylesheet" href="./theme/css/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <div><img src="" class="grv-img"/></div>
+        <div class="title"><a href="./">Showmik's Peapod </a></div>
+        <div class="sub-title"></div>
+
+<p>
+  <div class="view"><a href="./archives.html">Archives</a></div>
+</p>
+
+<!-- Social links -->
+<div class="social">
+<h4>Follow Me</h4>
+<ul>
+    <li><a href="https://www.linkedin.com/in/showmikpodder/">Linkedin</a></li>
+    <li><a href="https://twitter.com/poddyiatry">Twitter</a></li>
+    <li><a href="https://github.com/showmikpodder/">Github</a></li>
+    <li><a href="https://showmikpodder.github.io/Peapod/a-little-about-me.html">About Me</a></li>
+</ul>
+</div>
+
+      </header>
+      <section>
+<section id="content" class="body">
+  <article>
+      <div class="article-title">
+        Simple Flask App
+      </div>
+
+    <div class="entry-content">
+<p>
+<small>
+<abbr class="published" title="2017-08-15T00:00:00-04:00">
+  Tue 15 August 2017
+</abbr> | 
+  tags: 
+    <a href="./tag/python.html">python</a>, 
+    <a href="./tag/web-extraction.html">web extraction</a>, 
+    <a href="./tag/flask.html">flask</a>, 
+    <a href="./tag/heroku.html">heroku</a>, 
+    <a href="./tag/bokeh.html">bokeh</a>, 
+    <a href="./tag/quandl.html">quandl</a>, 
+    <a href="./tag/requests.html">requests</a>, 
+    <a href="./tag/pandas.html">pandas</a>, 
+ -- (<a href="./simple-flask-app.html" rel="bookmark">permalink</a>)
+</small>
+</p>      <p>Heres a simple Flask App I built that uses quandl's API to return the recent history of a stock. The finished app can be found <a href="https://showmik-dataincubator-project.herokuapp.com/">here.</a></p>
+<p>The github for my project's code is also found <a href="https://github.com/showmikpodder/DataIncubator_MilestoneProject">here.</a></p>
+<h2>The Objective</h2>
+<p>I just wanted to get an idea of how Flask and python works for deploying python apps on Heroku. </p>
+<h2>The Information Source</h2>
+<p><a href="https://www.quandl.com/">Quandl</a> provides a nice free API (although sometimes buggy) where you can view the history of a stock. Information such as closing price and dates are available. </p>
+<h2>The Process</h2>
+<p>The idea was  to use <a href="http://flask.pocoo.org/docs/0.10/tutorial/">Flask</a> to build a simple app.</p>
+<p>Flask apps have a general similar structure. Heres a quick rundown.</p>
+<p>Generate the necessary folder/file structure which generally looks like this:</p>
+<div class="highlight"><pre><span></span>/flaskapp
+    /templates
+    -app.py
+    -Procfile
+    -requirements.txt
+    -runtime.txt
+</pre></div>
+
+
+<ul>
+<li><strong>app.py</strong>
+This is where the main python code lives, these flask apps also have a general structure to their python code too.</li>
+</ul>
+<p>It looks similar to what is shown below. This simple app would return a html page that lives in the<code>/templates</code> folder.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;home.html&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;main&quot;</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+
+<p>The rest of these files are really related to Heroku and your deployment process
+* <strong>Procfile</strong>
+In my app I used gunicorn to point to where the app is for Heroku.</p>
+<div class="highlight"><pre><span></span><span class="n">web</span><span class="o">:</span> <span class="n">gunicorn</span> <span class="n">app</span><span class="o">:</span><span class="n">app</span>
+</pre></div>
+
+
+<ul>
+<li>
+<p><strong>runtime.txt</strong>
+This text file points out what verison of Python Heroku should deploy for your app.</p>
+</li>
+<li>
+<p><strong>requirements.txt</strong>
+Its in this text file that you point out what python packages should be installed.</p>
+</li>
+</ul>
+<p>For this stock history project, I used Flask's ability to handle GET and POST methods from user inputs from on the frontend html. These inputs were stock ticker indexes like "GOOGL", "F", "APPL". </p>
+<p>Information about these stocks were retrieved using the QUANDL api and stored in a pandas data frame which was then plotted using bokeh. Finally output was displayed on the frontend using bokehJS and a Content Delivery Network (CDN).</p>
+<p>All this can be seen clearly in my github code.</p>
+<p>Thanks for reading. :)</p>
+    </div><!-- /.entry-content -->
+  </article>
+</section>
+      </section>
+      <footer>
+        <p><small>&copy; Showmik's Peapod &mdash; Theme based on Sundown by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!-- Scale fix -->
+    <script>
+      var metas = document.getElementsByTagName('meta');
+      var i;
+      
+      if (navigator.userAgent.match(/iPhone/i)) {
+        for (i=0; i<metas.length; i++) {
+          if (metas[i].name == "viewport") {
+            metas[i].content = "width=device-width, minimum-scale=1.0, maximum-scale=1.0";
+          }
+        }
+      
+        document.addEventListener("gesturestart", gestureStart, false);
+      }
+
+      function gestureStart() {
+        for (i=0; i<metas.length; i++) {
+          if (metas[i].name == "viewport") {
+            metas[i].content = "width=device-width, minimum-scale=0.25, maximum-scale=1.6";
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
