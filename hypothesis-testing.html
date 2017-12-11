@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Hypothesis TestingShowmik's Peapod</title>
+
+    <link rel="stylesheet" href="./theme/css/main.css">
+    <link rel="stylesheet" href="./theme/css/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <div><img src="" class="grv-img"/></div>
+        <div class="title"><a href="./">Showmik's Peapod </a></div>
+        <div class="sub-title"></div>
+
+<p>
+  <div class="view"><a href="./archives.html">Archives</a></div>
+</p>
+
+<!-- Social links -->
+<div class="social">
+<h4>Follow Me</h4>
+<ul>
+    <li><a href="https://www.linkedin.com/in/showmikpodder/">Linkedin</a></li>
+    <li><a href="https://twitter.com/poddyiatry">Twitter</a></li>
+    <li><a href="https://github.com/showmikpodder/">Github</a></li>
+    <li><a href="https://showmikpodder.github.io/Peapod/a-little-about-me.html">About Me</a></li>
+</ul>
+</div>
+
+      </header>
+      <section>
+<section id="content" class="body">
+  <article>
+      <div class="article-title">
+        Hypothesis Testing
+      </div>
+
+    <div class="entry-content">
+<p>
+<small>
+<abbr class="published" title="2017-12-07T00:00:00-05:00">
+  Thu 07 December 2017
+</abbr> | 
+  tags: 
+    <a href="./tag/statistics.html">statistics</a>, 
+    <a href="./tag/hypothesis-testing.html">hypothesis testing</a>, 
+ -- (<a href="./hypothesis-testing.html" rel="bookmark">permalink</a>)
+</small>
+</p>      <p>So I recently had a first stage phone interview, that didn’t go as well as I wanted. The biggest thing was that a statistics question threw me off. The frustrating part was that I’m pretty sure that I knew the answer. I was just nervous and thrown off my game. </p>
+<p>The interviewer person threw me a question about calculating significance levels. It was a broad question that I probably had encountered somewhere before. </p>
+<p>I wanted to document my thoughts and essentially make sure I am able to better deal with hypothesis testing type questions better in the future. Hence the peapod post about hypothesis testing and significance!</p>
+<h1>Hypothesis Testing</h1>
+<p>To understand the deluge of data that is available today, statistics is more important than ever before. One of the biggest implementations is in understanding the results of an experiment that you may have conducted. Statistics allows you to test a hypothesis that you may have formed in response to a problem you may have. </p>
+<p>A hypothesis test essentially allows you to analyze two contradictory statements about the results of an experiment and determine which statement is best supported by the observed experimental data. </p>
+<p>I think to best understand this concept, its good to go back to basics and understand what a hypothesis and a null hypothesis is.</p>
+<h2>What is a hypothesis?</h2>
+<p>A hypothesis is essentially a statement that explains a problem. It links an independent variable to a dependent one. From my experience, the best clearly worded hypotheses are ones that utilize an <em>if-then</em> statement. </p>
+<p>Example hypothesis statements are:</p>
+<ol>
+<li><em>If the price of the cars are lowered, then more customers will come to the car dealership.</em></li>
+<li><em>If school started later in the day, then students would have better grades.</em></li>
+</ol>
+<p>These hypotheses are proposed solutions to a problem.</p>
+<ol>
+<li><em>If the price of the cars are lowered, then more customers will come to the car dealership.</em>
+a.  Problem: How can the number of customers coming to the dealership be increased?
+b.  Dependent Variable: Number of customers coming to the dealership
+c.  Independent Variable: Lowering the price of the cars</li>
+<li><em>If school started later in the day, then students would have better grades.</em>
+a.  Problem: How can student grades be improved?
+b.  Dependent Variable: Student academic performance
+c.  Independent Variable: Changing the start of school to later in the day</li>
+</ol>
+<h2>What is a Null Hypothesis?</h2>
+<p>Null hypotheses are an important concept in statistics. It is used to essentially check the validity of your hypothesis based on the experiment results. Null hypotheses assume that any kind of observed difference you see in your dependent variable after conducting an experiment is essentially due to chance. </p>
+<p>For our examples, the null hypotheses would be:</p>
+<ol>
+<li><em>If the price of the cars are lowered, then there would be no change in the number of customers coming to the dealership.</em></li>
+<li><em>If school started later in the day, then students would perform the same as they did with an earlier start time.</em></li>
+</ol>
+<p>Okay, now that we have those terms settled, now what?</p>
+<p>Lets think of this in terms of a real <em>imaginary</em> experiment. Say that we are testing a new process that improves a chemical process for the production of product A. The improvement was tested on 100 samples and produced units that had a mean length 3.2 inches with a standard deviation of 0.5. The old process produced product A that had lengths of 2.9.</p>
+<p>Did the new process really improve the lengths of product A?</p>
+<p>This is essentially a question of Statistical Significance.</p>
+<h2>Statistical Significance.</h2>
+<p>So in this example experiment, the hypothesis was that <em>If this new process is used, then the length of Product A will increase</em>. The results of the experiment produced an increase of lengths to 3.06 inches with a standard deviation of 0.5.</p>
+<p>To understand the significance of this result, we have to first assume that the null hypothesis is true. The null hypothesis in this scenario is <em>If the new process is used, it will have no affect on the lengths of Product A</em>. This essentially means that the lengths of Product A would not change regardless of the new process.</p>
+<p>Assuming that the lengths are distributed normally, if the null hypothesis is true, the grades would be normally distributed about a length of 2.9. To figure out if the results are statistically significant, a calculation on the probability of getting a average length of 3.06 with a standard deviation of 0.5 must be done.</p>
+<p>To perform this calculation, the standard deviation of the sampling distribution must be found. This is done by the following formula:
+<img alt="equation" src="http://www.sciweavers.org/tex2img.php?eq=%5Csigma_M%20%5Capprox%20%5Cfrac%7B%5Csigma_s%7D%7B%5Csqrt%7BN%7D%7D&amp;bc=White&amp;fc=Black&amp;im=jpg&amp;fs=12&amp;ff=arev&amp;edit=0"></p>
+<p>The standard error isn’t known so we can approximate standard deviation of the sampling distribution using the sample standard deviation of 0.5. This leads to a value of 0.05. </p>
+<p>We are essentially asking how many standard deviations away is 3.06 from 2.9, this involves finding the Z-score. The formula for Z-score can be found <a href="http://www.statisticshowto.com/probability-and-statistics/z-score/">here</a>.</p>
+<p>The calculated Z-score for this analysis is 3.2. This means that the length of 3.06 inches is 3.2 standard deviations away from the mean of 2.9 inches.  Looking up the associated p-value on a standard normal probabilities table.  I also used this handy dandy [tool.] (http://www.socscistatistics.com/pvalues/normaldistribution.aspx)</p>
+<p>If we assume that the new process has no affect, then the probability of getting a length of 3.06 is 0.00687%. Meaning that this is a strong indicator that the null hypothesis is wrong and the new process is significant in improving the length of Product A. </p>
+<p>The threshold p-value is typically 0.05, anything smaller than this value indicates strong evidence against a null hypothesis.</p>
+<p>Another way to express this is to say that the probability of obtaining a Type 1 error is very low. A Type 1 error is the mistake of rejecting the null hypothesis despite it being true. A type 1 error is essentially a False Positive. </p>
+<p>The opposite of this would be keeping saying a null hypothesis is correct when it really isn’t. This type of mistake is known as a Type II error or a False Negative. </p>
+<h2>One-tailed or Two-tailed Hypothesis Test</h2>
+<p>To quickly touch on this concept, the scenario painted above is a one-tailed hypothesis test. In these types of tests, one is usually trying to see if an experiment can improve or make worse a known observation. These tests are only testing one or the other.</p>
+<p>Two-tailed hypothesis tests are just trying to see if any change can occur when an experiment is done. </p>
+<p>For our hypothetical scenario, if we wanted to reword our hypothesis and make it into a two-tailed test. It would be as follows:
+<em>If this new process is used, there will be a change in the length of the Product.</em></p>
+<p>https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-what-are-the-differences-between-one-tailed-and-two-tailed-tests/</p>
+<p>In the next couple posts I’ll quickly go over a couple of types of hypothesis tests that are relevant in businesses today. </p>
+<p>Thanks for reading! See you in the next pod.</p>
+    </div><!-- /.entry-content -->
+  </article>
+</section>
+      </section>
+      <footer>
+        <p><small>&copy; Showmik's Peapod &mdash; Theme based on Sundown by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!-- Scale fix -->
+    <script>
+      var metas = document.getElementsByTagName('meta');
+      var i;
+      
+      if (navigator.userAgent.match(/iPhone/i)) {
+        for (i=0; i<metas.length; i++) {
+          if (metas[i].name == "viewport") {
+            metas[i].content = "width=device-width, minimum-scale=1.0, maximum-scale=1.0";
+          }
+        }
+      
+        document.addEventListener("gesturestart", gestureStart, false);
+      }
+
+      function gestureStart() {
+        for (i=0; i<metas.length; i++) {
+          if (metas[i].name == "viewport") {
+            metas[i].content = "width=device-width, minimum-scale=0.25, maximum-scale=1.6";
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
